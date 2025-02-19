@@ -11,8 +11,8 @@ The model is deployed via Streamlit, allowing users to input tumor measurement v
 * Manual Entry: Users input 5-10 values per attribute, which are processed into _mean, _se, and _worst metrics.
 * CSV Upload: Users can upload a pre-formatted dataset for batch predictions.
 
-#### 🛠️ How to run the app
-enter to: blablaputherethelink
+#### 🛠️ How to run the app | run the project locally
+enter to: [test the app in streamlit](https://breasdiseaseprediction.streamlit.app/)
 
 Clone this repository, and install rependencies *(pip)*:
 ```
