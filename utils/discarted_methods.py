@@ -288,43 +288,51 @@ class DiscartedMethods:
         return k_optimal
     
     #-#-#–#–#–#–#-#-#–#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-# 
-    
-    def _process_file_input(self, uploaded_file, header=False) -> dict:
-        """Procesa archivos subidos, tolerando valores faltantes y sin headers."""
+    def _process_file_input(self, file, header= False)-> pd.DataFrame:
+        """Process CSV file uploaded by the user to generate new data for prediction
+           - IMPORTANT: The file VALUES (measures) must have -> 
+             (1) The same order as self.base_attributes
+             (2) If the column names (headers) are not added, indicate it with the check mark ✅
+             (3) Is NOT necessary to add the same amount of values for each attribute.
+                 NULL -> (without measure in any instance)
+                -- (BUT must have at least 5 values and each of them must be separated by commas)
+                -- example: if -> 'val,NULL ,val' then -> 'val',, 'val'
+            Args:
+            - file (file): not added this param yet
+            - header (bool): if the file contains headers (important for the reading process)"""
         try:
-            # 1. Leer archivo según su tipo
-            file_name = uploaded_file.name.lower()
-            if file_name.endswith('.csv'):
-                df = pd.read_csv(uploaded_file, header= 0 if header else None, skipinitialspace=True)
-            elif file_name.endswith(('.xls', '.xlsx')):
-                df = pd.read_excel(uploaded_file, header=0 if header else None, engine='openpyxl')
+            user_file = file.name.lower()
+            if user_file.endswith('csv'):
+                df = pd.read_csv(
+                    file, skipinitialspace= True, header= 0 if header else None)
+                
+            elif user_file.endswith('xsl', 'xlsx'):
+                df = pd.read_excel(
+                    file, header= 0 if header else None, engine='openpyxl')
+                
             else:
-                raise ValueError("Formato no soportado. Use CSV o Excel.")
+                raise ValueError('⚠️ ERROR: file extension not recognised,'
+                                 'please add a CSV or Excel file')
             
-            # 2. Asignar nombres de columnas si no hay headers
-            if not header:
-                if len(df.columns) != len(deploy.BASE_ATTRIBUTES):
-                    raise ValueError("Número de columnas incorrecto. Verifique el archivo.")
-                df.columns = deploy.BASE_ATTRIBUTES  # Asignar nombres predefinidos
+            # validation: number of columns
+            if len(df.columns) != len(deploy.BASE_ATTRIBUTES):
+                raise ValueError(f'⚠️ ERROR: CSV file does not contain the required columns\n',
+                                 f'- MESSAGE: in adition, make sure they are sorted as needed')
             
-            # 3. Validar columnas requeridas
-            missing_cols = set(deploy.BASE_ATTRIBUTES) - set(df.columns)
-            if missing_cols:
-                raise ValueError(f"Columnas faltantes: {', '.join(missing_cols)}")
-
-            # 4. Procesar valores (agrupar todas las filas)
-            processed_data = {attr: [] for attr in deploy.BASE_ATTRIBUTES}
+            # sort columns with order needed
+            df.columns = deploy.BASE_ATTRIBUTES
             
-            for _, row in df.iterrows():
-                for attr in deploy.BASE_ATTRIBUTES:
-                    val = row[attr]
-                    if pd.notna(val) and isinstance(val, (int, float)):
-                        processed_data[attr].append(val)
-
-            return processed_data
-
+            # null treatment
+            df = df.fillna('missing')
+            dict_nulls = df.to_dict('list')
+            dict_new_data = {key: [val for val in values if val != 'missing']
+                             for key, values in dict_nulls.items()}
+            
+            return dict_new_data
+        
         except Exception as e:
-            st.error(f"🚨 Error al procesar archivo: {str(e)}")
+            st.error(f'ERROR: file not processed {e}')
+            
     
     
     
