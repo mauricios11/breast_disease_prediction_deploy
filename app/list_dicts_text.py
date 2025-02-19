@@ -84,7 +84,7 @@ The minimum of values required for each attribute is $5$ **values** and separate
 The model has used **three types of calculations** to make the prediction: 
 
 * 1️⃣ **Average**: Represents the average value of the measurements.
-* 2️⃣ **Standar Deviation**: Indicates the variability in the measurements.  
+* 2️⃣ **Standar D. Error**: Indicates the variability in the measurements.  
 * 3️⃣ **Greater severity (Worst)**: Calculated as the average of the three highest measurements.
 
 Then whe get a calculation result for each attribute. 
