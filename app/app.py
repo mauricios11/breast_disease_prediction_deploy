@@ -31,7 +31,7 @@ if __name__ == '__main__':
     show_insights = st.checkbox(' Check this box to get more info after'
                                 ' the prediction results')
     st.markdown(list_dicts.explanation_text)
-    st.image('./assets/example.png', width= 800)
+    st.image('../app/assets/example.png', width= 800)
 
     # option 1: upload the file
     use_header = st.checkbox(f'Does your file has a header?') 
