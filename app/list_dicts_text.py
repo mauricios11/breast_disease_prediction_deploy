@@ -80,6 +80,7 @@ The minimum of values required for each attribute is $5$ **values** and separate
 """
 
         self.insights_text ="""
+____        
 ##### 🧪 How was data analyzed?
 The model has used **three types of calculations** to make the prediction: 
 
@@ -92,4 +93,3 @@ Then whe get a calculation result for each attribute.
 
 ✅ These calculations are the result based on the  the measurements you have entered 
 *(base attributes)* and finally evaluate the tumor."""
-#mejorar texto de explicación y arreglar el problema al cargar el archivo
